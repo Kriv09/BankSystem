@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("api/v1/users")
 public class UserController {
 
     private final AppUserService appUserService;
@@ -25,7 +25,7 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<Object> addNewUser(@RequestBody AddUserRequest request) {
+    public ResponseEntity<String> addNewUser(@RequestBody AddUserRequest request) {
         RequestState state = RequestUtils.checkRequestState(request);
 
         // Handle request state
@@ -33,12 +33,7 @@ public class UserController {
             case EMPTY:
                 return ResponseEntity.badRequest().body("Request is empty.");
             case FULL:
-                // Prepare the user for saving
-                AppUser user = AppUser.parse(request);
-                user.setCreatedOn(LocalDate.now());
-
-                // Save the user
-                appUserService.save(user);
+                appUserService.save(request);
                 return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
             default:
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
