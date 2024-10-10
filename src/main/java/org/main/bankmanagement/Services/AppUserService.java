@@ -5,11 +5,11 @@ import org.main.bankmanagement.DTO.Requests.AddUserRequest;
 import org.main.bankmanagement.Models.AppUser;
 import org.main.bankmanagement.Repositories.AppUserRepository;
 import org.main.bankmanagement.Utility.BasedPasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppUserService {
@@ -41,5 +41,13 @@ public class AppUserService {
     public List<AppUser> getAll()
     {
         return appUserRepository.findAll();
+    }
+
+    public Optional<AppUser> findUserById(String userId) {
+        return appUserRepository.findById(userId);
+    }
+
+    public Boolean idExists(String id) {
+        return appUserRepository.existsById(id);
     }
 }

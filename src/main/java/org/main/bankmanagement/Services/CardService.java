@@ -1,6 +1,7 @@
 package org.main.bankmanagement.Services;
 
 import org.main.bankmanagement.DTO.Requests.AddCardRequest;
+import org.main.bankmanagement.Models.AppUser;
 import org.main.bankmanagement.Models.Card;
 import org.main.bankmanagement.Repositories.CardRepository;
 import org.main.bankmanagement.Utility.CardUtils;
@@ -12,20 +13,23 @@ import java.time.LocalDate;
 public class CardService {
 
     private final CardRepository cardRepository;
+    private final AppUserService appUserService;
 
-    public CardService(CardRepository cardRepository) {
+    public CardService(CardRepository cardRepository, AppUserService appUserService) {
         this.cardRepository = cardRepository;
+        this.appUserService = appUserService;
     }
 
-    public void saveCard(AddCardRequest cardRequest, String Userid) {
+    public void saveCard(AddCardRequest cardRequest) {
 
         Short cvv = CardUtils.generateRandomCVV();
         String number = CardUtils.generateRandomCardNumber(cardRequest.getCardType());
+        AppUser appUser = appUserService.findUserById(cardRequest.getUserId()).get();
 
         Card card = Card.builder()
                 .pin(cardRequest.getPin())
                 .cardType(cardRequest.getCardType())
-                .appUser(cardRequest.getAppUser())
+                .appUser(appUser)
                 .expiryDate(LocalDate.now())
                 .cardNumber(number)
                 .expired(false)
